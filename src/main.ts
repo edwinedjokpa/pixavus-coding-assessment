@@ -2,12 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { graphqlUploadExpress } from 'graphql-upload';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const port = configService.getOrThrow('APP_PORT');
+
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+    origin: ['*'],
     credentials: true,
     // all headers that client are allowed to use
     allowedHeaders: [
@@ -24,6 +28,7 @@ async function bootstrap() {
     graphqlUploadExpress({ maxFileSize: 100 * 1024 * 1024, maxFiles: 5 }),
   );
 
-  await app.listen(3000);
+  await app.listen(port || 3000);
+  console.log(`App is listening on ${port}`);
 }
 bootstrap();
