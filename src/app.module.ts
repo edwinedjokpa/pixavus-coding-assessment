@@ -11,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      path: '/graphql',
       playground: true,
     }),
     DatabaseModule,
