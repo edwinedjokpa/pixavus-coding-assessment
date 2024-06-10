@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   const configService = app.get(ConfigService);
-  const port = configService.getOrThrow('APP_PORT');
+  const port = configService.getOrThrow('APP_PORT') || 3000;
 
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
@@ -32,7 +32,7 @@ async function bootstrap() {
     graphqlUploadExpress({ maxFileSize: 100 * 1024 * 1024, maxFiles: 5 }),
   );
 
-  await app.listen(port || 3000);
+  await app.listen(port, '0.0.0.0');
   console.log(`App is listening on ${port}`);
 }
 bootstrap();
