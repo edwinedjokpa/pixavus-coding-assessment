@@ -5,13 +5,17 @@ import { graphqlUploadExpress } from 'graphql-upload';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const configService = app.get(ConfigService);
   const port = configService.getOrThrow('APP_PORT');
 
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: ['*'],
+    origin: [
+      '*',
+      'http://localhost:3000',
+      'https://pixavus-coding-assessment.onrender.com',
+    ],
     credentials: true,
     // all headers that client are allowed to use
     allowedHeaders: [
